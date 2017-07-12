@@ -43,10 +43,10 @@ class Seeker(Telegrammer):
         soup = BeautifulSoup(page.content, 'html.parser')
         for topic in soup.findAll("p", { "class" : "title" }):
             text = topic.find('a').getText().replace('&', 'and')
-            link = text + " " + topic.find('a').get('href')
+            link = topic.find('a').get('href')
             if link.startswith('/r'):
                 continue
-            to_send.append(link)
+            to_send.append(text + " " + link)
         return to_send
 
     def parse_hunt4freebies(self):
