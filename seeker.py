@@ -24,7 +24,7 @@ class Seeker(Telegrammer):
                 link = link[:-1]
             if link in self.sent:
                     continue
-            self.send_text(link, chat=-1001111779861)
+            self.send_text(link, chat='chat_id')
         with open('log.dat', 'w') as f:
             for link_ in list(set(list(self.sent) + freebies)):
                 f.write(link_ + '\n')
