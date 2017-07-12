@@ -1,5 +1,6 @@
 import sys
 import time
+import json
 
 import requests
 from bs4 import BeautifulSoup
@@ -23,8 +24,9 @@ class Seeker(Telegrammer):
             if link[-1] == '/':
                 link = link[:-1]
             if link in self.sent:
-                    continue
-            self.send_text(link, chat='chat_id')
+                print('Igonring link as previously sent.({})'.format(link))
+                continue
+            self.send_text(link, chat=self.config['chat_id'])
         with open('log.dat', 'w') as f:
             for link_ in list(set(list(self.sent) + freebies)):
                 f.write(link_ + '\n')
