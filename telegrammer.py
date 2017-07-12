@@ -2,9 +2,8 @@ import json
 
 import requests
 
-TOKEN = "313726066:AAFKTQjDAixSqdxiO16sl11BMIyfBjGpYKA"
+TOKEN = "TOKEN"
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
-url = 'https://postmates.com/chicago'
 
 
 class Telegrammer:
