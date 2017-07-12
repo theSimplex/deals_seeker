@@ -4,10 +4,6 @@ import requests
 
 
 class Telegrammer:
-    def __init__(self):
-        with open('config.json') as config_file:
-            self.config = json.loads(config_file.read())
-        self.message_url = "https://api.telegram.org/bot{}/".format(self.config['telegram_token'])
 
     def get_url(self, url):
         response = requests.get(url)
@@ -35,8 +31,6 @@ class Telegrammer:
             "sendMessage?text={}&chat_id={}".format(text, chat_id)
         self.get_url(url)
 
-    def send_text(self, body, chat=None):
-        if chat is None:
-            text, chat = self.get_last_chat_id_and_text(self.get_updates())
-        self.send_message(body, chat)
+    def send_text(self, body):
+        self.send_message(body, self.chat)
         print(body)
