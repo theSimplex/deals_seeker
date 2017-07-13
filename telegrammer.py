@@ -16,7 +16,7 @@ class Telegrammer:
         return js
 
     def get_updates(self):
-        url = URL + "getUpdates"
+        url = self.message_url + "getUpdates"
         js = self.get_json_from_url(url)
         return js
 
@@ -34,3 +34,7 @@ class Telegrammer:
     def send_text(self, body):
         self.send_message(body, self.chat)
         print(body)
+    
+    def send_heartbeat(self, body):
+        self.send_message(body, self.heartbeat)
+        

@@ -21,20 +21,38 @@ class Seeker(Telegrammer):
             self.config = json.loads(config_file.read())
         self.message_url = "https://api.telegram.org/bot{}/".format(self.config['telegram_token'])
         self.chat = self.config['chat_id']
+        self.heartbeat = self.config['heartbeat_id']
 
     def get_freebies(self):
-        freebies = self.parse_couponpro() + self.parse_reddit() + self.parse_hunt4freebies()
+        ignored = 0
+        sources = [self.parse_couponpro, self.parse_reddit, self.parse_hunt4freebies, self.parse_hip2save]
+        freebies = []
+        for source in sources:
+            freebies += source()
         for link in set(freebies):
             if link[-1] == '/':
                 link = link[:-1]
             if link in self.sent:
-                print('Igonring link as previously sent.({})'.format(link))
+                ignored += 1
                 continue
             self.send_text(link)
         with open('log.dat', 'w') as f:
             for link_ in list(set(list(self.sent) + freebies)):
                 f.write(link_ + '\n')
+        print('Ignored {} links as previously sent.'.format(ignored))
+        self.send_heartbeat('Ignored {} links'.format(ignored))
         
+    def parse_hip2save(self):
+        to_send = []
+        page = requests.get('http://hip2save.com/category/freebies/')
+        soup = BeautifulSoup(page.content, 'html.parser')
+        for article in soup.findAll("h6", {"class": "entry-title grid-title "}):
+            if len(article.findAll("div", {"class": "es-flag new-flags"})) == 0:
+                link = article.find('a').get('href')
+                if link:
+                    to_send.append(link)
+        return to_send
+
     def parse_reddit(self):
         to_send = []
         headers = {'User-Agent': ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36'
@@ -69,12 +87,12 @@ class Seeker(Telegrammer):
         return to_send
 
 while True:
-    # try:
-    go = Seeker()
-    go.get_freebies()
-    print('Fetched. Going to wait for half an hour. ({})'.format(time.ctime()))
-    time.sleep(1800)
-    # except KeyboardInterrupt:
-    #     raise
-    # except:
-    #     print('Failure: ', sys.exc_info()[0])
+    try:
+        go = Seeker()
+        go.get_freebies()
+        print('Fetched. Going to wait for half an hour. ({})'.format(time.ctime()))
+        time.sleep(1800)
+    except KeyboardInterrupt:
+        raise
+    except:
+        print('Failure: ', sys.exc_info()[0])
