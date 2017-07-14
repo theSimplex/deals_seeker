@@ -10,7 +10,7 @@ from telegrammer import Telegrammer
 
 class Seeker(Telegrammer):
     
-    crap_list = ['coupon', 'contest', 'chance_to_win', 'chance-to-win', 'chance to win']
+    crap_list = ['coupon', 'contest', 'chance_to_win', 'chance-to-win', 'chance to win', 'just', 'only']
 
     def __init__(self):
         self.sent = []
