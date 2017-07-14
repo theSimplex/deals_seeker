@@ -32,8 +32,6 @@ class Telegrammer:
         self.get_url(url)
 
     def send_text(self, body):
-        print('FSEND: {}'.format(body))
-        return
         self.send_message(body, self.chat)
         print(body)
     
