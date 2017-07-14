@@ -9,6 +9,9 @@ from telegrammer import Telegrammer
 
 
 class Seeker(Telegrammer):
+    
+    crap_list = ['coupon', 'contest', 'chance_to_win', 'chance-to-win', 'chance to win']
+
     def __init__(self):
         self.sent = []
         with open('log.dat', 'r') as f:
@@ -33,7 +36,7 @@ class Seeker(Telegrammer):
         for link in set(freebies):
             if link[-1] == '/':
                 link = link[:-1]
-            if link in self.sent:
+            if link in self.sent or self.scan_for_crap(link):
                 ignored += 1
                 continue
             else:
@@ -97,6 +100,15 @@ class Seeker(Telegrammer):
                 link = str(post.find('a')).split('href="')[-1].split('"', 1)[0]
                 to_send.append(link)
         return to_send
+
+    def scan_for_crap(self, link):
+        for crap in self.crap_list:
+            if crap in link.split('/')[-1]:
+                self.send_heartbeat(link)
+                print('Found crap: {}'.format(link))
+                return True
+        else:
+            return False
 
 while True:
     try:
