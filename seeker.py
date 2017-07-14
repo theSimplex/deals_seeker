@@ -12,7 +12,7 @@ class Seeker(Telegrammer):
     def __init__(self):
         self.sent = []
         with open('log.dat', 'r') as f:
-            sent_links = set([i.strip('\n') for i in f.readlines()])
+            sent_links = [i.strip('\n') for i in f.readlines()]
             for old_link in sent_links:
                 if old_link[-1] == '/':
                     old_link = old_link[:-1]
@@ -25,6 +25,7 @@ class Seeker(Telegrammer):
 
     def get_freebies(self):
         ignored = 0
+        saved = []
         sources = [self.parse_couponpro, self.parse_reddit, self.parse_hunt4freebies, self.parse_hip2save]
         freebies = []
         for source in sources:
@@ -35,12 +36,15 @@ class Seeker(Telegrammer):
             if link in self.sent:
                 ignored += 1
                 continue
-            self.send_text(link)
+            else:
+                self.send_text(link)
+                saved.append(link)
         with open('log.dat', 'w') as f:
-            for link_ in list(set(list(self.sent) + freebies)):
+            if len(self.sent) > 200:
+                self.sent = self.sent[-200:]
+            for link_ in self.sent + freebies:
                 f.write(link_ + '\n')
         print('Ignored {} links as previously sent.'.format(ignored))
-        self.send_heartbeat('Ignored {} links'.format(ignored))
         
     def parse_hip2save(self):
         to_send = []
@@ -58,6 +62,14 @@ class Seeker(Telegrammer):
         headers = {'User-Agent': ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36'
                    ' (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')}
         page = requests.get('https://www.reddit.com/r/freebies/', headers=headers)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        for topic in soup.findAll("p", { "class" : "title" }):
+            text = topic.find('a').getText().replace('&', 'and')
+            link = topic.find('a').get('href')
+            if link.startswith('/r'):
+                continue
+            to_send.append(text + " " + link)
+        page = requests.get('https://www.reddit.com/r/efreebies/', headers=headers)
         soup = BeautifulSoup(page.content, 'html.parser')
         for topic in soup.findAll("p", { "class" : "title" }):
             text = topic.find('a').getText().replace('&', 'and')
@@ -90,8 +102,8 @@ while True:
     try:
         go = Seeker()
         go.get_freebies()
-        print('Fetched. Going to wait for half an hour. ({})'.format(time.ctime()))
-        time.sleep(1800)
+        print('Fetched. Going to wait. ({})'.format(time.ctime()))
+        time.sleep(900)
     except KeyboardInterrupt:
         raise
     except:
