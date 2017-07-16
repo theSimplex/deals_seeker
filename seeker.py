@@ -11,7 +11,7 @@ from telegrammer import Telegrammer
 class Seeker(Telegrammer):
     
     crap_list = ['coupon', 'contest', 'chance', 'just', 'only', 'off', 'buy', 'spend',
-                 'sweepstakes', 'win', 'pre-order', 'shipped', 'purchase']
+                 'sweepstakes', 'win', 'pre-order', 'shipped', 'purchase', 'deal']
 
     def __init__(self):
         self.sent = []
