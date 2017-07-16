@@ -21,6 +21,7 @@ class Seeker(Telegrammer):
                 if old_link[-1] == '/':
                     old_link = old_link[:-1]
                 self.sent.append(old_link)
+            self.sent_tails = [i.split('/')[-1] for i in self.sent]
         with open('config.json') as config_file:
             self.config = json.loads(config_file.read())
         self.message_url = "https://api.telegram.org/bot{}/".format(self.config['telegram_token'])
@@ -39,6 +40,8 @@ class Seeker(Telegrammer):
             if link in self.sent or self.scan_for_crap(link):
                 ignored += 1
                 continue
+            elif link.split('/')[-1] in self.sent_tails:
+                print('Found duplicate: {}'.format(link))
             else:
                 self.send_text(link)
                 bird_food.append(link)
