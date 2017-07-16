@@ -11,7 +11,7 @@ from telegrammer import Telegrammer
 class Seeker(Telegrammer):
     
     crap_list = ['coupon', 'contest', 'chance', 'just', 'only', 'off', 'buy', 'spend',
-                 'sweepstakes', 'win']
+                 'sweepstakes', 'win', 'pre-order']
 
     def __init__(self):
         self.sent = []
@@ -29,9 +29,8 @@ class Seeker(Telegrammer):
 
     def get_freebies(self):
         ignored = 0
-        saved = []
+        saved, freebies, bird_food = [], [], []
         sources = [self.parse_couponpro, self.parse_reddit, self.parse_hunt4freebies, self.parse_hip2save]
-        freebies = []
         for source in sources:
             freebies += source()
         for link in set(freebies):
@@ -42,12 +41,14 @@ class Seeker(Telegrammer):
                 continue
             else:
                 self.send_text(link)
+                bird_food.append(link)
                 saved.append(link)
         with open('log.dat', 'w') as f:
             if len(self.sent) > 200:
                 self.sent = self.sent[-200:]
             for link_ in self.sent + freebies:
                 f.write(link_ + '\n')
+        self.put_new_tweets_for_the_bird(bird_food)
         print('Ignored {} links as previously sent.'.format(ignored))
         
     def parse_hip2save(self):
@@ -110,6 +111,11 @@ class Seeker(Telegrammer):
                 return True
         else:
             return False
+
+    def put_new_tweets_for_the_bird(self, urls):
+        with open('new.dat', 'w') as f:
+            for link_ in urls:
+                f.write(link_ + '\n')
 
 while True:
     try:
