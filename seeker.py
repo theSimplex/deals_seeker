@@ -11,7 +11,7 @@ from telegrammer import Telegrammer
 class Seeker(Telegrammer):
     
     crap_list = ['coupon', 'contest', 'chance', 'just', 'only', 'off', 'buy', 'spend',
-                 'sweepstakes', 'win', 'pre-order', 'shipped', 'purchase', 'deal']
+                 'sweepstakes', 'win', 'pre-order', 'shipped', 'purchase', 'deal', 'possible']
 
     def __init__(self):
         self.sent = []
@@ -53,7 +53,7 @@ class Seeker(Telegrammer):
                 f.write(link_ + '\n')
         self.put_new_tweets_for_the_bird(bird_food)
         print('Ignored {} links as previously sent.'.format(ignored))
-        
+
     def parse_hip2save(self):
         to_send = []
         page = requests.get('http://hip2save.com/category/freebies/')
