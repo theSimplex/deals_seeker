@@ -109,7 +109,6 @@ class Seeker(Telegrammer):
     def scan_for_crap(self, link):
         for crap in self.crap_list:
             if crap in link.split('/')[-1]:
-                self.send_heartbeat(link)
                 print('Found crap: {}'.format(link))
                 return True
         else:
