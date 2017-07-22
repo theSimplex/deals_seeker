@@ -12,7 +12,7 @@ class Seeker(Telegrammer):
     
     crap_list = ['coupon', 'contest', 'chance', 'just', 'only', 'off', 'buy', 'spend',
                  'sweepstakes', 'win', 'pre-order', 'shipped', 'purchase', 'deal', 'possibl',
-                 'giveaway']
+                 'giveaway', 'app', 'ebook', 'cardholder', 'member', 'sale']
 
     def __init__(self):
         self.sent = []
@@ -71,14 +71,6 @@ class Seeker(Telegrammer):
         headers = {'User-Agent': ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36'
                    ' (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')}
         page = requests.get('https://www.reddit.com/r/freebies/', headers=headers)
-        soup = BeautifulSoup(page.content, 'html.parser')
-        for topic in soup.findAll("p", { "class" : "title" }):
-            text = topic.find('a').getText().replace('&', 'and')
-            link = topic.find('a').get('href')
-            if link.startswith('/r'):
-                continue
-            to_send.append(text + " " + link)
-        page = requests.get('https://www.reddit.com/r/efreebies/', headers=headers)
         soup = BeautifulSoup(page.content, 'html.parser')
         for topic in soup.findAll("p", { "class" : "title" }):
             text = topic.find('a').getText().replace('&', 'and')
