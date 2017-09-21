@@ -9,11 +9,14 @@ from telegrammer import Telegrammer
 
 
 class Seeker(Telegrammer):
-    
-    crap_list = ['coupon', 'contest', 'chance', 'just', 'only', 'off', 'buy', 'spend', 'recipe', 'subscription',
-                 'sweepstakes', 'win', 'pre-order', 'shipped', 'purchase', 'deal', 'possibl', 'kroger', 'magazine',
-                 'giveaway', 'app', 'ebook', 'cardholder', 'member', 'sale', 'savings', 'save', 'as-low', 'points',
-                 'survey', 'rewards', 'rental', 'starting', 'kmart', 'Kroger', 'guide']
+
+    crap_list = ['coupon', 'contest', 'chance', 'just', 'only', 'off', 'buy',
+                 'spend', 'recipe', 'subscription', 'sweepstakes', 'win',
+                 'pre-order', 'shipped', 'purchase', 'deal', 'possibl',
+                 'kroger', 'magazine', 'giveaway', 'app', 'ebook',
+                 'cardholder', 'member', 'sale', 'savings', 'save', 'as-low',
+                 'points', 'survey', 'rewards', 'rental', 'starting', 'kmart',
+                 'Kroger', 'guide']
 
     def __init__(self):
         self.sent = []
@@ -26,14 +29,16 @@ class Seeker(Telegrammer):
             self.sent_tails = [i.split('/')[-1] for i in self.sent]
         with open('config.json') as config_file:
             self.config = json.loads(config_file.read())
-        self.message_url = "https://api.telegram.org/bot{}/".format(self.config['telegram_token'])
+        self.message_url = "https://api.telegram.org/bot{}/".format(
+            self.config['telegram_token'])
         self.chat = self.config['chat_id']
         self.heartbeat = self.config['heartbeat_id']
 
     def get_freebies(self):
         ignored = 0
         saved, freebies, bird_food = [], [], []
-        sources = [self.parse_couponpro, self.parse_reddit, self.parse_hunt4freebies, self.parse_hip2save]
+        sources = [self.parse_couponpro, self.parse_reddit,
+                   self.parse_hunt4freebies, self.parse_hip2save]
         for source in sources:
             freebies += source()
         for link in set(freebies):
@@ -60,8 +65,10 @@ class Seeker(Telegrammer):
         to_send = []
         page = requests.get('http://hip2save.com/category/freebies/')
         soup = BeautifulSoup(page.content, 'html.parser')
-        for article in soup.findAll("h6", {"class": "entry-title grid-title "}):
-            if len(article.findAll("div", {"class": "es-flag new-flags"})) == 0:
+        for article in soup.findAll("h6",
+                                    {"class": "entry-title grid-title "}):
+            if len(article.findAll("div",
+                                   {"class": "es-flag new-flags"})) == 0:
                 link = article.find('a').get('href')
                 if link:
                     to_send.append(link)
@@ -69,11 +76,13 @@ class Seeker(Telegrammer):
 
     def parse_reddit(self):
         to_send = []
-        headers = {'User-Agent': ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36'
-                   ' (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')}
-        page = requests.get('https://www.reddit.com/r/freebies/', headers=headers)
+        headers = {'User-Agent':
+                   ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36'
+                    ' (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')}
+        page = requests.get('https://www.reddit.com/r/freebies/',
+                            headers=headers)
         soup = BeautifulSoup(page.content, 'html.parser')
-        for topic in soup.findAll("p", { "class" : "title" }):
+        for topic in soup.findAll("p", {"class": "title"}):
             text = topic.find('a').getText().replace('&', 'and')
             link = topic.find('a').get('href')
             if link.startswith('/r'):
@@ -85,7 +94,7 @@ class Seeker(Telegrammer):
         to_send = []
         page = requests.get('http://hunt4freebies.com/')
         soup = BeautifulSoup(page.content, 'html.parser')
-        for topic in soup.findAll("h2", { "class" : "entry-title" }):
+        for topic in soup.findAll("h2", {"class": "entry-title"}):
             link = topic.find('a').get('href')
             to_send.append(link)
         return to_send
@@ -94,8 +103,8 @@ class Seeker(Telegrammer):
         to_send = []
         page = requests.get('http://www.couponproblog.com/category/freebies/')
         soup = BeautifulSoup(page.content, 'html.parser')
-        for post in soup.findAll("div", { "class" : "headline_area" }):
-            if len(post.findAll("div", { "class" : "expired_imghead" })) == 0:
+        for post in soup.findAll("div", {"class": "headline_area"}):
+            if len(post.findAll("div", {"class": "expired_imghead"})) == 0:
                 link = str(post.find('a')).split('href="')[-1].split('"', 1)[0]
                 to_send.append(link)
         return to_send
@@ -112,6 +121,7 @@ class Seeker(Telegrammer):
         with open('new.dat', 'w') as f:
             for link_ in urls:
                 f.write(link_ + '\n')
+
 
 while True:
     try:

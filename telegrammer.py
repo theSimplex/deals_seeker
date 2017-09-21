@@ -21,7 +21,6 @@ class Telegrammer:
         return js
 
     def get_last_chat_id_and_text(self, updates):
-        num_updates = len(updates["result"])
         text = updates["result"][-1]["message"]["text"]
         chat_id = updates["result"][-1]["message"]["chat"]["id"]
         return (text, chat_id)
@@ -34,7 +33,6 @@ class Telegrammer:
     def send_text(self, body):
         self.send_message(body, self.chat)
         print(body)
-    
+
     def send_heartbeat(self, body):
         self.send_message(body, self.heartbeat)
-        
