@@ -51,6 +51,8 @@ class Seeker(Telegrammer):
                 print('Found duplicate: {}'.format(link))
             else:
                 self.send_text(link)
+                if 'twitter' in link:
+                    self.send_heartbeat(link)
                 bird_food.append(link)
                 saved.append(link)
         with open('log.dat', 'w') as f:
