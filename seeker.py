@@ -121,7 +121,10 @@ class Seeker(Telegrammer):
             return False
 
     def get_url_info(self, url):
-        preview = link_preview.generate_dict(url)
+        try:
+            preview = link_preview.generate_dict(url)
+        except HTTPError as e:
+            print(e)
         return ' '.join(preview.values()) + url
 
     def put_new_tweets_for_the_bird(self, urls):
