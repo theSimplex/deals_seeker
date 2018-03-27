@@ -2,10 +2,10 @@ import json
 import re
 import sys
 import time
+import link_preview
 
 import requests
 from bs4 import BeautifulSoup
-
 from telegrammer import Telegrammer
 
 
@@ -123,29 +123,12 @@ class Seeker(Telegrammer):
 
     def get_url_info(self, url):
         try:
-            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-            response = requests.get(url, headers=headers)
-            meta_elems = re.findall('<[\s]*meta[^<>]+og:(?:title|image|description)(?!:)[^<>]+>', response.text)
-            og_map = map(self.return_og, meta_elems)
-            preview = dict(list(og_map))
+            preview = link_preview.generate_dict(url)
             return ' '.join(preview.values()) + url
         except Exception as e:
             print('Link failed : {}.'.format(url))
             print(e)
             return url
-
-    def return_og(self, elem):
-        '''
-        returns content of og_elements
-        '''
-        content = re.findall('content[\s]*=[\s]*"[^<>"]+"', elem)[0]
-        p = re.findall('"[^<>]+"', content)[0][1:-1]
-        if 'og:title' in elem:
-            return ("og.title", p)
-        elif 'og:image' in elem and 'og:image:' not in elem:
-            return ("og.image", p)
-        elif 'og:description' in elem:
-            return ("og.description", p)
 
 
     def put_new_tweets_for_the_bird(self, urls):
