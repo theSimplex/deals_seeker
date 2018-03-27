@@ -114,8 +114,9 @@ class Seeker(Telegrammer):
         return to_send
 
     def scan_for_crap(self, link):
+        info = self.get_url_info(link)
         for crap in self.crap_list:
-            if crap in self.get_url_info(link):
+            if crap in info:
                 print('Found crap: {}'.format(link))
                 return True
         else:
@@ -129,7 +130,6 @@ class Seeker(Telegrammer):
             print('Link failed : {}.'.format(url))
             print(e)
             return url
-
 
     def put_new_tweets_for_the_bird(self, urls):
         with open('new.dat', 'w') as f:
