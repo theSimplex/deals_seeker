@@ -124,9 +124,8 @@ class Seeker(Telegrammer):
         try:
             preview = link_preview.generate_dict(url)
             return ' '.join(preview.values()) + url
-        except HTTPError as e:
+        except HTTPError:
             print('Link failed : {}.'.format(url))
-            print(e)
             return url
 
     def put_new_tweets_for_the_bird(self, urls):
