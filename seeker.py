@@ -127,7 +127,6 @@ class Seeker(Telegrammer):
             meta_elems = re.findall('<[\s]*meta[^<>]+og:(?:title|image|description)(?!:)[^<>]+>', response.text)
             og_map = map(self.return_og, meta_elems)
             preview = dict(list(og_map))
-            import pdb; pdb.set_trace()
             return ' '.join(preview.values()) + url
         except Exception as e:
             print('Link failed : {}.'.format(url))
