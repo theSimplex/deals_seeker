@@ -124,6 +124,7 @@ class Seeker(Telegrammer):
         try:
             preview = link_preview.generate_dict(url)
         except HTTPError as e:
+            print('Link failed : {}.'.format(url))
             print(e)
         return ' '.join(preview.values()) + url
 
