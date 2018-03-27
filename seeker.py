@@ -123,10 +123,11 @@ class Seeker(Telegrammer):
     def get_url_info(self, url):
         try:
             preview = link_preview.generate_dict(url)
+            return ' '.join(preview.values()) + url
         except HTTPError as e:
             print('Link failed : {}.'.format(url))
             print(e)
-        return ' '.join(preview.values()) + url
+            return url
 
     def put_new_tweets_for_the_bird(self, urls):
         with open('new.dat', 'w') as f:
