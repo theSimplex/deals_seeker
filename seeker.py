@@ -131,12 +131,12 @@ class Seeker(Telegrammer):
 
 
 while True:
-    # try:
-    go = Seeker()
-    go.get_freebies()
-    print('Fetched. Going to wait. ({})'.format(time.ctime()))
-    time.sleep(900)
-    # except KeyboardInterrupt:
-    #     raise
-    # except:
-    #     print('Failure: ', sys.exc_info()[0])
+    try:
+        go = Seeker()
+        go.get_freebies()
+        print('Fetched. Going to wait. ({})'.format(time.ctime()))
+        time.sleep(900)
+    except KeyboardInterrupt:
+        raise
+    except:
+        print('Failure: ', sys.exc_info()[0])
