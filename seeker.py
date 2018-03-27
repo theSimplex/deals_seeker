@@ -123,7 +123,8 @@ class Seeker(Telegrammer):
 
     def get_url_info(self, url):
         try:
-            response = requests.get(url)
+            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            response = requests.get(url, headers=headers)
             meta_elems = re.findall('<[\s]*meta[^<>]+og:(?:title|image|description)(?!:)[^<>]+>', response.text)
             og_map = map(self.return_og, meta_elems)
             preview = dict(list(og_map))
