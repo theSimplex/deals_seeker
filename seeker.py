@@ -4,7 +4,7 @@ import json
 
 import requests
 from bs4 import BeautifulSoup
-
+from link_preview import link_preview
 from telegrammer import Telegrammer
 
 
@@ -17,6 +17,8 @@ class Seeker(Telegrammer):
                  'cardholder', 'member', 'sale', 'savings', 'save', 'as-low',
                  'points', 'survey', 'rewards', 'rental', 'starting', 'kmart',
                  'Kroger', 'guide']
+
+    goodies_list = ['twitter', 'shirt']
 
     def __init__(self):
         self.sent = []
@@ -51,7 +53,7 @@ class Seeker(Telegrammer):
                 print('Found duplicate: {}'.format(link))
             else:
                 self.send_text(link)
-                if 'twitter' in link:
+                if any(key in self.get_url_info(link) for key in self.goodies_list):
                     self.send_heartbeat(link)
                 bird_food.append(link)
                 saved.append(link)
@@ -85,11 +87,10 @@ class Seeker(Telegrammer):
                             headers=headers)
         soup = BeautifulSoup(page.content, 'html.parser')
         for topic in soup.findAll("p", {"class": "title"}):
-            text = topic.find('a').getText().replace('&', 'and')
             link = topic.find('a').get('href')
             if link.startswith('/r'):
                 continue
-            to_send.append(text + " " + link)
+            to_send.append(link)
         return to_send
 
     def parse_hunt4freebies(self):
@@ -113,11 +114,15 @@ class Seeker(Telegrammer):
 
     def scan_for_crap(self, link):
         for crap in self.crap_list:
-            if crap in link.split('/')[-1]:
+            if crap in self.get_url_info(link):
                 print('Found crap: {}'.format(link))
                 return True
         else:
             return False
+
+    def get_url_info(self, url):
+        preview = link_preview.generate_dict(url)
+        return ' '.join(preview.values()) + url
 
     def put_new_tweets_for_the_bird(self, urls):
         with open('new.dat', 'w') as f:
@@ -126,12 +131,12 @@ class Seeker(Telegrammer):
 
 
 while True:
-    try:
-        go = Seeker()
-        go.get_freebies()
-        print('Fetched. Going to wait. ({})'.format(time.ctime()))
-        time.sleep(900)
-    except KeyboardInterrupt:
-        raise
-    except:
-        print('Failure: ', sys.exc_info()[0])
+    # try:
+    go = Seeker()
+    go.get_freebies()
+    print('Fetched. Going to wait. ({})'.format(time.ctime()))
+    time.sleep(900)
+    # except KeyboardInterrupt:
+    #     raise
+    # except:
+    #     print('Failure: ', sys.exc_info()[0])
