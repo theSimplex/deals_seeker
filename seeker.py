@@ -11,11 +11,11 @@ from telegrammer import Telegrammer
 
 class Seeker(Telegrammer):
 
-    crap_list = ['coupon', 'contest', 'chance', 'just', 'only', 'off', 'buy',
+    crap_list = ['coupon', 'contest', 'chance', '.99', 'off', 'buy',
                  'spend', 'recipe', 'subscription', 'sweepstakes', 'win',
                  'pre-order', 'shipped', 'purchase', 'deal', 'possibl',
-                 'kroger', 'magazine', 'giveaway', 'app', 'ebook',
-                 'cardholder', 'member', 'sale', 'savings', 'save', 'as-low',
+                 'kroger', 'magazine', 'giveaway', ' app ', 'ebook',
+                 'cardholder', 'member', 'sale', 'savings', 'as-low',
                  'points', 'survey', 'rewards', 'rental', 'starting', 'kmart',
                  'Kroger', 'guide']
 
