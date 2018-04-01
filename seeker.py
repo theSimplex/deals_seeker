@@ -14,10 +14,10 @@ class Seeker(Telegrammer):
     crap_list = ['coupon', 'contest', 'chance', '.99', 'off', 'buy',
                  'spend', 'recipe', 'subscription', 'sweepstakes', 'win',
                  'pre-order', 'shipped', 'purchase', 'deal', 'possibl',
-                 'kroger', 'magazine', 'giveaway', ' app ', 'ebook',
+                 'kroger', 'magazine', 'giveaway', 'ebook',
                  'cardholder', 'member', 'sale', 'savings', 'as-low',
                  'points', 'survey', 'rewards', 'rental', 'starting', 'kmart',
-                 'Kroger', 'guide']
+                 'Kroger', 'guide', 'only', 'app', 'regular', 'just', '-at-']
 
     goodies_list = ['twitter', 'shirt']
 
