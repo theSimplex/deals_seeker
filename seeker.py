@@ -9,6 +9,11 @@ from bs4 import BeautifulSoup
 from telegrammer import Telegrammer
 
 
+headers = {'User-Agent':
+          ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36'
+           ' (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')}
+
+
 class Seeker(Telegrammer):
 
     crap_list = ['coupon', 'contest', 'chance', '.99', 'off', 'buy',
@@ -17,7 +22,8 @@ class Seeker(Telegrammer):
                  'kroger', 'magazine', 'giveaway', 'ebook',
                  'cardholder', 'member', 'sale', 'savings', 'as-low',
                  'points', 'survey', 'rewards', 'rental', 'starting', 'kmart',
-                 'Kroger', 'guide', 'only', 'app', 'regular', 'just', '-at-']
+                 'Kroger', 'guide', 'only', 'app', 'regular', 'just', '-at-',
+                 'printable', 'recipe']
 
     goodies_list = ['twitter', 'shirt']
 
@@ -38,10 +44,11 @@ class Seeker(Telegrammer):
         self.heartbeat = self.config['heartbeat_id']
 
     def get_freebies(self):
+        self.parse_freeflys()
         ignored = 0
         saved, freebies, bird_food = [], [], []
-        sources = [self.parse_couponpro, self.parse_reddit,
-                   self.parse_hunt4freebies, self.parse_hip2save]
+        sources = [self.parse_couponpro, self.parse_reddit, self.parse_hunt4freebies, 
+                   self.parse_hip2save, self.parse_freeflys]
         for source in sources:
             freebies += source()
         for link in set(freebies):
@@ -79,11 +86,20 @@ class Seeker(Telegrammer):
                     to_send.append(link)
         return to_send
 
+    def parse_freeflys(self):
+        links_to_return = []
+        base_url = 'http://www.freeflys.com'
+        child_urls = ['/Free_Samples/Other', '/Free_Samples/Children', '/Free_Samples/Food', 
+                      '/Free_Samples/Health']
+        for child in child_urls:
+            page = requests.get(base_url + child, headers=headers)
+            soup = BeautifulSoup(page.content, 'html.parser')
+            for topic in soup.findAll("a", {"class": "SO_offerlink"}):
+                links_to_return.append(topic.get('href').replace('..', base_url))
+        return links_to_return
+
     def parse_reddit(self):
         to_send = []
-        headers = {'User-Agent':
-                   ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36'
-                    ' (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')}
         page = requests.get('https://www.reddit.com/r/freebies/',
                             headers=headers)
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -116,7 +132,7 @@ class Seeker(Telegrammer):
     def scan_for_crap(self, link):
         info = self.get_url_info(link)
         for crap in self.crap_list:
-            if crap in info:
+            if crap.upper() in info.upper():
                 print('Found crap: {}'.format(link))
                 return True
         else:
@@ -138,12 +154,12 @@ class Seeker(Telegrammer):
 
 
 while True:
-    try:
-        go = Seeker()
-        go.get_freebies()
-        print('Fetched. Going to wait. ({})'.format(time.ctime()))
-        time.sleep(900)
-    except KeyboardInterrupt:
-        raise
-    except:
-        print('Failure: ', sys.exc_info()[0])
+    # try:
+    go = Seeker()
+    go.get_freebies()
+    print('Fetched. Going to wait. ({})'.format(time.ctime()))
+    time.sleep(900)
+    # except KeyboardInterrupt:
+    #     raise
+    # except:
+    #     print('Failure: ', sys.exc_info()[0])
