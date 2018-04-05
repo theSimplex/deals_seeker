@@ -23,7 +23,7 @@ class Seeker(Telegrammer):
                  'cardholder', 'member', 'sale', 'savings', 'as-low',
                  'points', 'survey', 'rewards', 'rental', 'starting', 'kmart',
                  'Kroger', 'guide', 'only', 'app', 'regular', 'just', '-at-',
-                 'printable', 'recipe']
+                 'printable', 'recipe', '_at_']
 
     goodies_list = ['twitter', 'shirt']
 
