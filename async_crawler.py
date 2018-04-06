@@ -25,6 +25,6 @@ class AsyncCrawler(object):
                         response = await response.read()
                         self.links.append(source.process(response))
 
-    def parse(self):
+    def crawl(self):
         self.loop.run_until_complete(self.get_links(Sources.__subclasses__()))
         return [item for sublist in self.links for item in sublist]

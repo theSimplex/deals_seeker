@@ -47,9 +47,9 @@ class Seeker(Telegrammer):
     def get_freebies(self):
         ignored = 0
         saved, freebies, bird_food = [], [], []
-        parser = AsyncParser()
+        crawler = AsyncCrawler()
         start = time.time()
-        freebies = parser.parse()
+        freebies = crawler.crawl()
         stop = time.time() - start
         print('Found {} links in {}s.'.format(len(freebies), stop))
         for link in set(freebies):
