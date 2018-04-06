@@ -7,7 +7,7 @@ import link_preview
 import requests
 from bs4 import BeautifulSoup
 from telegrammer import Telegrammer
-from async_parser import AsyncParser
+from async_crawler import AsyncCrawler
 
 
 headers = {'User-Agent':
@@ -67,8 +67,8 @@ class Seeker(Telegrammer):
                 bird_food.append(link)
                 saved.append(link)
         with open('log.dat', 'w') as f:
-            if len(self.sent) > 200:
-                self.sent = self.sent[-200:]
+            if len(self.sent) > 2000:
+                self.sent = self.sent[-2000:]
             for link_ in self.sent + freebies:
                 f.write(link_ + '\n')
         self.put_new_tweets_for_the_bird(bird_food)

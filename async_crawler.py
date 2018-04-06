@@ -10,7 +10,7 @@ headers = {'User-Agent':
            ' (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')}
 
 
-class AsyncParser(object):
+class AsyncCrawler(object):
     
     def __init__(self):
         self.loop = asyncio.get_event_loop()
