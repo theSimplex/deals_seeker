@@ -9,7 +9,6 @@ def generate_dict(url):
                 'description': '',
                 'image': '',
                 'website': ''
-        if Exception occurs, it raises Exception of urllib.request module.
     '''
     return_dict = {}
     try:
@@ -47,8 +46,8 @@ def generate_dict(url):
         return return_dict
     
     except Exception as e:
-        'Raises Occurred Exception'
-        raise e
+        print(e)
+        
 
 def return_og(elem):
     '''
