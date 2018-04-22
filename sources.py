@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 crap_list = ['coupon', 'contest', 'chance', '.99', 'off', 'buy',
              'spend', 'recipe', 'subscription', 'sweepstakes', 'win',
              'pre-order', 'shipped', 'purchase', 'deal', 'possibl',
-             'kroger', 'magazine', 'giveaway', 'ebook', 'ios',
+             'kroger', 'magazine', 'giveaway', 'ebook', 'ios', 'entrance',
              'cardholder', 'member', 'sale', 'savings', 'as-low',
              'points', 'survey', 'rewards', 'rental', 'starting', 'kmart',
              'Kroger', 'guide', 'only', 'app', 'regular', 'just', '-at-',
